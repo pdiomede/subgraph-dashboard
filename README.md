@@ -21,7 +21,7 @@ View the latest results here: [https://subgraph-dashboard.vercel.app](https://su
 ## 🧪 How to Run Locally
 
 1. Clone the repo
-2. Create a `.env` file and add your GitHub token:
+2. Create a `.env` file and add your GitHub token (line 9):
    ```
    GITHUB_TOKEN=your_github_token_here
    ```

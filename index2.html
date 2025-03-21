@@ -73,7 +73,7 @@
       color: var(--link);
     }
     .dataTable-dropdown, .dataTable-info {
-      display: none !important;
+      display: none !important;  /* Completely hide entries per page */
     }
   </style>
 </head>
@@ -1572,7 +1572,8 @@
         dataTable = new simpleDatatables.DataTable("#repoTable", {
             perPage: 50,
             searchable: true,
-            sortable: true
+            sortable: true,
+            perPageSelect: false  // Completely removes dropdown
         });
     });
 
@@ -1586,7 +1587,8 @@
         dataTable = new simpleDatatables.DataTable("#repoTable", {
             perPage: 50,
             searchable: true,
-            sortable: true
+            sortable: true,
+            perPageSelect: false
         });
     };
   </script>

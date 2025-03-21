@@ -1,103 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Subgraph Repositories Dashboard</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2em;
-      background-color: #f8f9fa;
-      color: #212529;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    body.dark {
-      background-color: #121212;
-      color: #f1f1f1;
-    }
-
-    h2 {
-      margin-top: 0;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 1.5em;
-    }
-
-    input, button {
-      padding: 8px 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    button.toggle {
-      background-color: #343a40;
-      color: white;
-      border: none;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-    }
-
-    body.dark table {
-      background-color: #1e1e1e;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background: #343a40;
-      color: white;
-      cursor: pointer;
-    }
-
-    body.dark th {
-      background: #444;
-    }
-
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-
-    body.dark tr:hover {
-      background-color: #2c2c2c;
-    }
-
-    .avatar {
-      vertical-align: middle;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      margin-right: 8px;
-    }
-
-    @media (max-width: 768px) {
-      table, th, td {
-        font-size: 14px;
-      }
-    }
+    body { font-family: sans-serif; background: #f9f9f9; padding: 2rem; color: #333; }
+    h1 { color: #222; margin-bottom: 0.2rem; }
+    h2, h3 { font-weight: normal; margin-top: 0; color: #666; }
+    .summary, .generated { margin-bottom: 1rem; font-size: 1rem; color: #555; }
+    table { border-collapse: collapse; width: 100%; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    th, td { padding: 0.75rem; border: 1px solid #ddd; text-align: left; font-size: 0.95rem; }
+    th { cursor: pointer; background: #f0f0f0; }
+    tr:hover { background-color: #f5f5f5; }
+    input { margin-bottom: 1rem; padding: 0.5rem; width: 250px; border: 1px solid #ccc; border-radius: 4px; }
+    .filter-container { margin-bottom: 1.5rem; }
+    .pagination { margin-top: 1rem; text-align: center; }
+    .pagination button { margin: 0 4px; padding: 0.4rem 0.7rem; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+    .pagination button.active { font-weight: bold; background: #eee; }
+    .contributors { margin-bottom: 2rem; }
+    .contributors ul { padding-left: 1.2rem; }
   </style>
 </head>
 <body>
-  <h2>Subgraph Repositories Dashboard</h2>
-  <div class="toolbar">
-    <input type="text" id="searchInput" placeholder="Search repositories...">
-    <input type="number" id="minStars" placeholder="Min stars" min="0">
-    <input type="date" id="minDate">
-    <button class="toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+  <h1>📊 Subgraph Repositories Dashboard</h1>
+  <h2>Tracking public subgraph.yaml/.yml usage on GitHub</h2>
+  <div class="summary" id="summary"></div>
+  <div class="generated" id="generated"></div>
+
+  <div class="contributors">
+    <h3>🌟 Top 10 Contributors (by number of repos)</h3>
+    <ul id="topContributors"></ul>
+  </div>
+
+  <div class="filter-container">
+    <input type="text" id="search" placeholder="🔍 Filter by owner..." onkeyup="filterTable()" />
   </div>
 
   <table id="repoTable">
@@ -110,100 +47,94 @@
         <th>Description</th>
       </tr>
     </thead>
-    <tbody id="tableBody"></tbody>
+    <tbody></tbody>
   </table>
+  <div class="pagination" id="pagination"></div>
 
   <script>
-    let tableData = [];
+    let allRows = [];
+    let currentPage = 1;
+    const rowsPerPage = 50;
 
-    fetch('subgraph_repositories_filtered.csv')
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.trim().split('\n').slice(1);
-        rows.forEach(row => {
-          const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-          tableData.push({
-            repository: cols[0],
-            url: cols[1],
-            owner: cols[2],
-            description: cols[3].replace(/^"|"$/g, ''),
-            stars: parseInt(cols[4]) || 0,
-            last_updated: cols[5]
-          });
-        });
-        renderTable();
+    async function loadCSV() {
+      const response = await fetch('subgraph_repositories_filtered.csv');
+      const text = await response.text();
+      const rows = text.trim().split('\n');
+      const headers = rows[0].split(',');
+      const dataRows = rows.slice(1);
+      const tbody = document.querySelector("tbody");
+
+      let lastUpdated = "N/A";
+      const contributors = {};
+
+      allRows = dataRows.map(row => {
+        const cols = row.split(',');
+        lastUpdated = cols[5] > lastUpdated ? cols[5] : lastUpdated;
+        contributors[cols[2]] = (contributors[cols[2]] || 0) + 1;
+        return \`
+          <tr>
+            <td><a href="\${cols[1]}" target="_blank">\${cols[0]}</a></td>
+            <td><a href="https://github.com/\${cols[2]}" target="_blank">\${cols[2]}</a></td>
+            <td>\${cols[4]}</td>
+            <td>\${cols[5]}</td>
+            <td>\${cols[3]}</td>
+          </tr>\`;
       });
 
-    function renderTable() {
-      const search = document.getElementById("searchInput").value.toLowerCase();
-      const minStars = parseInt(document.getElementById("minStars").value) || 0;
-      const minDate = document.getElementById("minDate").value;
+      document.getElementById("summary").innerText =
+        \`📦 Total repositories: \${allRows.length} | 🕒 Latest update: \${lastUpdated}\`;
 
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
+      const now = new Date().toLocaleString();
+      document.getElementById("generated").innerText =
+        \`📅 Report generated on: \${now}\`;
 
-      tableData
-        .filter(row => {
-          const matchesSearch = `${row.repository} ${row.owner} ${row.description}`.toLowerCase().includes(search);
-          const matchesStars = row.stars >= minStars;
-          const matchesDate = !minDate || new Date(row.last_updated) >= new Date(minDate);
-          return matchesSearch && matchesStars && matchesDate;
-        })
-        .forEach(row => {
-          const tr = document.createElement("tr");
-          const avatar = `https://github.com/${row.owner}.png`;
-          const formattedDate = new Date(row.last_updated).toLocaleDateString();
+      const topContribs = Object.entries(contributors)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([owner, count]) => \`<li><a href="https://github.com/\${owner}" target="_blank">\${owner}</a> — \${count} repos</li>\`);
+      document.getElementById("topContributors").innerHTML = topContribs.join("");
 
-          tr.innerHTML = `
-            <td><img class="avatar" src="${avatar}" alt="${row.owner}"><a href="${row.url}" target="_blank">${row.repository}</a></td>
-            <td>${row.owner}</td>
-            <td>${row.stars}</td>
-            <td>${formattedDate}</td>
-            <td>${row.description}</td>
-          `;
-          tbody.appendChild(tr);
-        });
+      sortTable(2, true);
+      displayPage(1);
+      renderPagination();
     }
 
-    document.getElementById("searchInput").addEventListener("input", renderTable);
-    document.getElementById("minStars").addEventListener("input", renderTable);
-    document.getElementById("minDate").addEventListener("change", renderTable);
+    function sortTable(colIndex, descending = false) {
+      allRows.sort((a, b) => {
+        const tdA = a.match(/<td.*?>(.*?)<\/td>/g)[colIndex].replace(/<[^>]+>/g, '');
+        const tdB = b.match(/<td.*?>(.*?)<\/td>/g)[colIndex].replace(/<[^>]+>/g, '');
+        const numA = parseFloat(tdA) || 0;
+        const numB = parseFloat(tdB) || 0;
+        return descending ? numB - numA : numA - numB;
+      });
+    }
 
-    function sortTable(n) {
-      const table = document.getElementById("repoTable");
-      let switching = true, dir = "desc", switchcount = 0;
-      while (switching) {
-        switching = false;
-        const rows = table.rows;
-        for (let i = 1; i < rows.length - 1; i++) {
-          let shouldSwitch = false;
-          const x = rows[i].getElementsByTagName("TD")[n];
-          const y = rows[i + 1].getElementsByTagName("TD")[n];
-          let xVal = x.textContent || x.innerText;
-          let yVal = y.textContent || y.innerText;
-          if (n === 2) {
-            xVal = parseFloat(xVal) || 0;
-            yVal = parseFloat(yVal) || 0;
-          }
-          if (dir === "asc" ? xVal > yVal : xVal < yVal) {
-            shouldSwitch = true;
-            break;
-          }
-        }
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount++;
-        } else if (switchcount === 0 && dir === "desc") {
-          dir = "asc";
-          switching = true;
-        }
+    function filterTable() {
+      const value = document.getElementById("search").value.toLowerCase();
+      const filtered = allRows.filter(row => row.toLowerCase().includes(value));
+      currentPage = 1;
+      displayPage(currentPage, filtered);
+      renderPagination(filtered.length);
+    }
+
+    function displayPage(page, data = allRows) {
+      currentPage = page;
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const tbody = document.querySelector("tbody");
+      tbody.innerHTML = data.slice(start, end).join('');
+    }
+
+    function renderPagination(length = allRows.length) {
+      const totalPages = Math.ceil(length / rowsPerPage);
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += \`<button onclick="displayPage(\${i})" class="\${i === currentPage ? 'active' : ''}">\${i}</button>\`;
       }
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
+    loadCSV();
   </script>
 </body>
 </html>

@@ -8,61 +8,105 @@ It includes:
 - ✅ A public HTML dashboard to explore the results
 - ✅ Daily automation via a cron job
 
+---
+
 ## 🔧 Technologies
+
 - Python 3
 - GitHub REST API
-- dotenv for token management
-- Pandas for CSV processing
-- HTML, JavaScript for dashboard
+- `dotenv` for environment variable management
+- `pandas` for CSV processing
+- HTML + JavaScript for dashboard
+- Cron for scheduled automation
+
+---
 
 ## 🚀 Live Dashboard
-View the latest results here: [https://subgraph-dashboard.vercel.app](https://subgraph-dashboard.vercel.app)
+
+➡️ [https://subgraph-dashboard.vercel.app](https://subgraph-dashboard.vercel.app)  
+This dashboard is automatically updated daily with the latest GitHub data.
+
+---
 
 ## 🧪 How to Run Locally
 
-1. Clone the repo
-2. Create a `.env` file and add your GitHub token (line 9):
+1. Clone the repository:
+
+   ```bash
+   git clone git@github.com:pdiomede/subgraph-dashboard.git
+   cd subgraph-dashboard
    ```
+
+2. Create a `.env` file and add your GitHub token:
+
+   ```env
    GITHUB_TOKEN=your_github_token_here
    ```
-3. Run the script:
+
+3. Run the script manually:
+
    ```bash
    python3 search_subgraphs_clean.py
    ```
-4. Open `index.html` in your browser
 
-## 📅 Automation (macOS)
+4. Open `index.html` in a browser to explore the dashboard.
 
-To update and push results daily:
+---
 
-1. Add `update_and_push.sh` in your project folder:
+## ⚙️ Automating with Cron (macOS / Linux)
 
-   ```bash
-   #!/bin/bash
-   cd /path/to/project
-   python3 search_subgraphs_clean.py
-   git add subgraph_repositories_filtered.csv
-   git commit -m "🔄 Daily update: $(date +'%Y-%m-%d %H:%M')" || echo "No changes"
-   git push origin main
-   ```
+To keep your dashboard updated **automatically every day**, use a cron job.
 
-2. Make it executable:
+### 🔹 Step 1: Create a Shell Script
 
-   ```bash
-   chmod +x update_and_push.sh
-   ```
+In the root of your project folder, create a file named `update_and_push.sh`:
 
-3. Add it to your crontab:
+```bash
+#!/bin/bash
+
+cd /Users/pdiomede/Desktop/phython  # <-- update to your actual project path
+
+# Run the data collection script
+python3 search_subgraphs_clean.py
+
+# Add and commit only if changes exist
+git add subgraph_repositories_filtered.csv top_contributors.json
+git commit -m "🔄 Daily update: $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
+git push origin main
+```
+
+Make it executable:
+
+```bash
+chmod +x update_and_push.sh
+```
+
+### 🔹 Step 2: Schedule the Script with Cron
+
+1. Open your crontab:
 
    ```bash
    crontab -e
    ```
 
-   And insert:
+2. Add this line at the bottom:
 
    ```bash
-   0 9 * * * /path/to/project/update_and_push.sh
+   0 9 * * * /Users/pdiomede/Desktop/phython/update_and_push.sh >> /Users/pdiomede/Desktop/phython/cron.log 2>&1
    ```
+
+   This runs your update script every day at **9:00 AM** and logs the output to `cron.log`.
+
+---
+
+## 📊 Data Summary
+
+- `subgraph_repositories_filtered.csv`: main dataset
+- `top_contributors.json`: top 10 contributors for dashboard
+- Data is sorted by last updated and stars
+- Dashboard includes filters, pagination, and summary view
+
+---
 
 ## 🙌 Contributions
 

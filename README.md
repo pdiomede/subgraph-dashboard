@@ -64,13 +64,8 @@ To update and push results daily:
    0 9 * * * /path/to/project/update_and_push.sh
    ```
 
-## 🛡 GitHub Token Safety
-
-- Your token is never stored in the repo
-- `.env` is excluded via `.gitignore`
-
 ## 🙌 Contributions
 
-This dashboard is built by Paolo for the Web3 and subgraph community.
+This dashboard is built by Paolo Diomede for the developer community in The Graph ecosystem.
 
 Feel free to fork or suggest improvements!

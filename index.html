@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subgraph Repositories Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      background-color: #f8f9fa;
+      color: #212529;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 1.5em;
+    }
+
+    input, button {
+      padding: 8px 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button.toggle {
+      background-color: #343a40;
+      color: white;
+      border: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    body.dark table {
+      background-color: #1e1e1e;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #343a40;
+      color: white;
+      cursor: pointer;
+    }
+
+    body.dark th {
+      background: #444;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    body.dark tr:hover {
+      background-color: #2c2c2c;
+    }
+
+    .avatar {
+      vertical-align: middle;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 768px) {
+      table, th, td {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Subgraph Repositories Dashboard</h2>
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="Search repositories...">
+    <input type="number" id="minStars" placeholder="Min stars" min="0">
+    <input type="date" id="minDate">
+    <button class="toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+  </div>
+
+  <table id="repoTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Repository</th>
+        <th onclick="sortTable(1)">Owner</th>
+        <th onclick="sortTable(2)">Stars</th>
+        <th onclick="sortTable(3)">Last Updated</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <script>
+    let tableData = [];
+
+    fetch('subgraph_repositories_filtered.csv')
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.trim().split('\n').slice(1);
+        rows.forEach(row => {
+          const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+          tableData.push({
+            repository: cols[0],
+            url: cols[1],
+            owner: cols[2],
+            description: cols[3].replace(/^"|"$/g, ''),
+            stars: parseInt(cols[4]) || 0,
+            last_updated: cols[5]
+          });
+        });
+        renderTable();
+      });
+
+    function renderTable() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const minStars = parseInt(document.getElementById("minStars").value) || 0;
+      const minDate = document.getElementById("minDate").value;
+
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+
+      tableData
+        .filter(row => {
+          const matchesSearch = `${row.repository} ${row.owner} ${row.description}`.toLowerCase().includes(search);
+          const matchesStars = row.stars >= minStars;
+          const matchesDate = !minDate || new Date(row.last_updated) >= new Date(minDate);
+          return matchesSearch && matchesStars && matchesDate;
+        })
+        .forEach(row => {
+          const tr = document.createElement("tr");
+          const avatar = `https://github.com/${row.owner}.png`;
+          const formattedDate = new Date(row.last_updated).toLocaleDateString();
+
+          tr.innerHTML = `
+            <td><img class="avatar" src="${avatar}" alt="${row.owner}"><a href="${row.url}" target="_blank">${row.repository}</a></td>
+            <td>${row.owner}</td>
+            <td>${row.stars}</td>
+            <td>${formattedDate}</td>
+            <td>${row.description}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderTable);
+    document.getElementById("minStars").addEventListener("input", renderTable);
+    document.getElementById("minDate").addEventListener("change", renderTable);
+
+    function sortTable(n) {
+      const table = document.getElementById("repoTable");
+      let switching = true, dir = "desc", switchcount = 0;
+      while (switching) {
+        switching = false;
+        const rows = table.rows;
+        for (let i = 1; i < rows.length - 1; i++) {
+          let shouldSwitch = false;
+          const x = rows[i].getElementsByTagName("TD")[n];
+          const y = rows[i + 1].getElementsByTagName("TD")[n];
+          let xVal = x.textContent || x.innerText;
+          let yVal = y.textContent || y.innerText;
+          if (n === 2) {
+            xVal = parseFloat(xVal) || 0;
+            yVal = parseFloat(yVal) || 0;
+          }
+          if (dir === "asc" ? xVal > yVal : xVal < yVal) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else if (switchcount === 0 && dir === "desc") {
+          dir = "asc";
+          switching = true;
+        }
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+  </script>
+</body>
+</html>

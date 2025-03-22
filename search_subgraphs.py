@@ -18,7 +18,7 @@ HEADERS = {
 
 SEARCH_URL = "https://api.github.com/search/code"
 REPO_URL_TEMPLATE = "https://api.github.com/repos/{}"
-EXCLUDED_ORGS = ["graphprotocol", "graphops", "edgeandnode", "streamingfast"]
+EXCLUDED_ORGS = ["graphprotocol", "graphops", "edgeandnode", "streamingfast","pinax-network"]
 
 def get_repo_metadata(full_name):
     url = REPO_URL_TEMPLATE.format(full_name)

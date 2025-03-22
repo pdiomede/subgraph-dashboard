@@ -1,9 +1,5 @@
 [
   {
-    "owner":"pinax-network",
-    "repo_count":31
-  },
-  {
     "owner":"mercuricchloride",
     "repo_count":6
   },
@@ -37,6 +33,10 @@
   },
   {
     "owner":"derzwerggimli",
+    "repo_count":3
+  },
+  {
+    "owner":"matstyler",
     "repo_count":3
   }
 ]

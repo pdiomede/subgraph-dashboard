@@ -1,12 +1,17 @@
-# 📊 Subgraph GitHub Dashboard
+# 📊 Subgraph & Substreams GitHub Dashboard
 
-This project tracks public usage of `subgraph.yaml` / `subgraph.yml` files across GitHub.
+This repository contains a Python script and interactive dashboards that track the adoption of Subgraphs (`subgraph.yaml` / `subgraph.yml`) and Substreams (`substreams.yaml` / `substreams.yml`) across GitHub.
 
-It includes:
-- ✅ A Python script that scans GitHub for subgraph projects
-- ✅ A CSV export with filtered data
-- ✅ A public HTML dashboard to explore the results
-- ✅ Daily automation via a cron job
+---
+
+## 🚀 Live Dashboards
+
+Explore the dashboards online:
+
+- **[Subgraphs Dashboard](https://subgraph-dashboard.vercel.app)**
+- **[Substreams Dashboard](https://subgraph-dashboard.vercel.app/index2.html)**
+
+*Dashboards update daily.*
 
 ---
 
@@ -21,12 +26,6 @@ It includes:
 
 ---
 
-## 🚀 Live Dashboard
-
-➡️ [https://subgraph-dashboard.vercel.app](https://subgraph-dashboard.vercel.app)  
-This dashboard is automatically updated daily with the latest GitHub data.
-
----
 
 ## 🧪 How to Run Locally
 

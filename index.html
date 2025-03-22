@@ -53,7 +53,19 @@ table.datatable th, table.datatable td {
   border-bottom: 1px solid #333;
   padding: 12px;
 }
-</style></head>
+</style>
+<style>
+  thead th.sortable::after {
+    content: " ⇅";
+    font-size: 12px;
+    color: #888;
+  }
+  body.light-mode table.datatable thead {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+  }
+</style>
+</head>
 <body>
 <h1>Subgraph Dashboard</h1>
 <a href="index2.html">→ Visit Substreams Dashboard</a>
@@ -63,7 +75,7 @@ table.datatable th, table.datatable td {
 <p><strong>📦 Repositories collected:</strong> 460</p>
 <p><strong>🕒 Report generated on:</strong> 2025-03-22 14:14:14 UTC</p>
 </div>
-<table class="datatable" id="table">
+<table class="datatable datatable" id="table">
 <thead>
 <tr>
 <th>repository</th>
@@ -3756,18 +3768,27 @@ table.datatable th, table.datatable td {
 </tbody>
 </table>
 <script defer="" src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
 <script>
-const dataTable = new simpleDatatables.DataTable("#table", {
-  perPage: 50,
-  perPageSelect: false,
-  searchable: true,
-  sortable: true,
-  fixedHeight: true
-});
+  window.addEventListener("load", function () {
+    const table = document.querySelector("#table");
+    if (table) {
+      new simpleDatatables.DataTable(table, {
+        perPage: 50,
+        searchable: true,
+        sortable: true,
+        fixedHeight: true,
+        labels: {
+          placeholder: "🔍 Search...",
+          perPage: "",
+        },
+      });
+    }
+  });
 
-function toggleTheme() {
-  document.body.classList.toggle("light-mode");
-}
-            </script>
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+  }
+</script>
 </body>
 </html>

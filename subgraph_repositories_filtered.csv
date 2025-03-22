@@ -1,9 +1,10 @@
 repository,url,owner,stars,last_updated
+hasura/axiom,https://github.com/hasura/axiom,hasura,0,2025-03-22 01:38:19+00:00
 opensource-observer/oso,https://github.com/opensource-observer/oso,opensource-observer,89,2025-03-21 22:36:12+00:00
 neftielabs/neftie,https://github.com/neftielabs/neftie,neftielabs,5,2025-03-21 21:58:56+00:00
-hasura/axiom,https://github.com/hasura/axiom,hasura,0,2025-03-21 18:19:27+00:00
 gazamba/nft-ticketing-dapp,https://github.com/gazamba/nft-ticketing-dapp,gazamba,0,2025-03-21 17:08:33+00:00
 midl-xyz/liquity,https://github.com/midl-xyz/liquity,midl-xyz,0,2025-03-21 15:40:13+00:00
+autonomys/faucet,https://github.com/autonomys/faucet,autonomys,3,2025-03-21 15:39:02+00:00
 kleros/kleros-v2,https://github.com/kleros/kleros-v2,kleros,65,2025-03-20 22:50:00+00:00
 1Hive/gardens-v2,https://github.com/1Hive/gardens-v2,1hive,18,2025-03-20 18:46:02+00:00
 GainsNetwork-org/gtrade-stats-subgraph,https://github.com/GainsNetwork-org/gtrade-stats-subgraph,gainsnetwork-org,1,2025-03-20 17:11:11+00:00
@@ -45,7 +46,6 @@ cowprotocol/subgraph,https://github.com/cowprotocol/subgraph,cowprotocol,4,2024-
 Maxim280596/street-cred-subgraph,https://github.com/Maxim280596/street-cred-subgraph,maxim280596,0,2024-12-17 08:27:15+00:00
 jamiebones/crowd_funding_subgraph,https://github.com/jamiebones/crowd_funding_subgraph,jamiebones,0,2024-12-16 07:28:52+00:00
 hooperben/matesraffle,https://github.com/hooperben/matesraffle,hooperben,0,2024-12-09 22:19:44+00:00
-eshaan7/subgraph-eas,https://github.com/eshaan7/subgraph-eas,eshaan7,0,2024-12-09 09:01:16+00:00
 Koders-Krypto/meme-agent-subgraph,https://github.com/Koders-Krypto/meme-agent-subgraph,koders-krypto,1,2024-12-08 07:28:53+00:00
 lokeshwaran100/coinswipe,https://github.com/lokeshwaran100/coinswipe,lokeshwaran100,1,2024-12-08 06:30:37+00:00
 rk-rishikesh/SecondSaturday,https://github.com/rk-rishikesh/SecondSaturday,rk-rishikesh,0,2024-12-07 22:06:59+00:00
@@ -55,11 +55,13 @@ DePerp/dswap-subgraph,https://github.com/DePerp/dswap-subgraph,deperp,0,2024-11-
 jcsome/ExerciseWeb3,https://github.com/jcsome/ExerciseWeb3,jcsome,0,2024-11-26 09:53:48+00:00
 africarare/marketplace-subgraph,https://github.com/africarare/marketplace-subgraph,africarare,0,2024-11-22 06:37:09+00:00
 jasonkwm/crop-cash,https://github.com/jasonkwm/crop-cash,jasonkwm,0,2024-11-17 01:53:30+00:00
+0xethay/ethay-subgraph,https://github.com/0xethay/ethay-subgraph,0xethay,0,2024-11-17 00:52:56+00:00
 kuyen-labs/fuulfactory-subgraph,https://github.com/kuyen-labs/fuulfactory-subgraph,kuyen-labs,0,2024-11-14 20:30:48+00:00
 yoms07/Crowdfuding-Dapps,https://github.com/yoms07/Crowdfuding-Dapps,yoms07,0,2024-11-12 10:05:43+00:00
 magma-fi/subgraph,https://github.com/magma-fi/subgraph,magma-fi,0,2024-11-11 11:42:25+00:00
 memetaverseproject/memetaverse-subgraph,https://github.com/memetaverseproject/memetaverse-subgraph,memetaverseproject,0,2024-11-09 03:47:17+00:00
 dipanshuhappy/commeme,https://github.com/dipanshuhappy/commeme,dipanshuhappy,0,2024-11-08 00:42:41+00:00
+ragingrahul/EarthCommons,https://github.com/ragingrahul/EarthCommons,ragingrahul,0,2024-11-06 16:17:59+00:00
 jaishana25/StakeLearn-,https://github.com/jaishana25/StakeLearn-,jaishana25,0,2024-11-04 11:12:23+00:00
 ashishlal2003/FedBlocks,https://github.com/ashishlal2003/FedBlocks,ashishlal2003,0,2024-11-04 09:31:16+00:00
 hudsonhrh/Breadchain-subgraph,https://github.com/hudsonhrh/Breadchain-subgraph,hudsonhrh,0,2024-10-23 23:35:01+00:00
@@ -163,6 +165,7 @@ schmidsi/pointsicle,https://github.com/schmidsi/pointsicle,schmidsi,1,2024-03-17
 showtime-xyz/base-nfts-subgraph,https://github.com/showtime-xyz/base-nfts-subgraph,showtime-xyz,0,2024-03-16 16:14:25+00:00
 nijoe1/AIMarket,https://github.com/nijoe1/AIMarket,nijoe1,0,2024-03-16 13:41:29+00:00
 top-comengineer/RaffleSubgraph,https://github.com/top-comengineer/RaffleSubgraph,top-comengineer,0,2024-03-15 13:02:33+00:00
+Mumtaz503/Employment-marketplace-front-end,https://github.com/Mumtaz503/Employment-marketplace-front-end,mumtaz503,0,2024-03-15 11:37:43+00:00
 mangas/uniswap-v3-dataset-sg,https://github.com/mangas/uniswap-v3-dataset-sg,mangas,0,2024-03-15 05:56:04+00:00
 K-Honsu/ETH-Nigeria-Zero-to-dapp-hackathon,https://github.com/K-Honsu/ETH-Nigeria-Zero-to-dapp-hackathon,k-honsu,0,2024-03-06 23:51:24+00:00
 zaswap/zaswap-subgraph,https://github.com/zaswap/zaswap-subgraph,zaswap,0,2024-03-01 03:22:36+00:00
@@ -175,7 +178,6 @@ rtfei/Subgraphs,https://github.com/rtfei/Subgraphs,rtfei,2,2024-02-11 21:38:40+0
 Range-Protocol/subgraph,https://github.com/Range-Protocol/subgraph,range-protocol,1,2024-02-08 09:47:12+00:00
 cryptexfinance/ctx-delegation-stats,https://github.com/cryptexfinance/ctx-delegation-stats,cryptexfinance,0,2024-02-05 18:24:09+00:00
 JohnCorrigan1/kelpDao-SPS,https://github.com/JohnCorrigan1/kelpDao-SPS,johncorrigan1,0,2024-01-29 23:22:30+00:00
-Charged-Particles/rarible-subgraph,https://github.com/Charged-Particles/rarible-subgraph,charged-particles,2,2024-01-23 19:09:52+00:00
 EVM-BUILDER/Dex-Smart-Contract-Graphnode,https://github.com/EVM-BUILDER/Dex-Smart-Contract-Graphnode,evm-builder,1,2024-01-22 07:30:55+00:00
 muktanshumishra24/base-nft-subgraph,https://github.com/muktanshumishra24/base-nft-subgraph,muktanshumishra24,0,2024-01-21 19:29:26+00:00
 0xukhezo/Spectre-Protocol,https://github.com/0xukhezo/Spectre-Protocol,0xukhezo,0,2024-01-20 09:16:11+00:00
@@ -252,7 +254,6 @@ ChainSafe/game-subgraphs,https://github.com/ChainSafe/game-subgraphs,chainsafe,2
 Ian-Bright/bls-wallet-analytics,https://github.com/Ian-Bright/bls-wallet-analytics,ian-bright,0,2023-06-01 15:00:45+00:00
 upnodedev/gnosis-gravatar-subgraph,https://github.com/upnodedev/gnosis-gravatar-subgraph,upnodedev,0,2023-05-28 17:49:08+00:00
 morgan-redbite/zksyncdex-graph,https://github.com/morgan-redbite/zksyncdex-graph,morgan-redbite,1,2023-05-23 04:31:28+00:00
-nhussein11/subgraph-explorer,https://github.com/nhussein11/subgraph-explorer,nhussein11,1,2023-05-05 13:20:03+00:00
 Web3Rizzards/bluebirdswap,https://github.com/Web3Rizzards/bluebirdswap,web3rizzards,1,2023-04-19 01:55:39+00:00
 gaollg/tintin-lesson-5,https://github.com/gaollg/tintin-lesson-5,gaollg,0,2023-04-14 07:31:37+00:00
 DALHOUM-Ahmed/aurora-subgraph,https://github.com/DALHOUM-Ahmed/aurora-subgraph,dalhoum-ahmed,0,2023-03-31 04:50:36+00:00
@@ -263,7 +264,6 @@ asim07/BunnyPunk-subgraphs,https://github.com/asim07/BunnyPunk-subgraphs,asim07,
 VlodkoMr/near-chatme,https://github.com/VlodkoMr/near-chatme,vlodkomr,17,2023-03-14 08:19:57+00:00
 ouryi2019/shhans_club_test_subgrah,https://github.com/ouryi2019/shhans_club_test_subgrah,ouryi2019,0,2023-03-08 09:45:55+00:00
 DimensionDev/ITO-Subgraph,https://github.com/DimensionDev/ITO-Subgraph,dimensiondev,1,2023-03-05 17:50:54+00:00
-omurovec/npc-wars,https://github.com/omurovec/npc-wars,omurovec,8,2023-03-05 06:49:24+00:00
 DimensionDev/RedPacket-Subgraph,https://github.com/DimensionDev/RedPacket-Subgraph,dimensiondev,0,2023-03-03 04:44:51+00:00
 dl-dapppad/subgraph,https://github.com/dl-dapppad/subgraph,dl-dapppad,0,2023-02-24 13:05:43+00:00
 mesher-labs/swallow-monorepo,https://github.com/mesher-labs/swallow-monorepo,mesher-labs,7,2023-02-14 10:23:20+00:00
@@ -360,7 +360,6 @@ fudgebucket27/lexplorerSubgraph,https://github.com/fudgebucket27/lexplorerSubgra
 Braeden0415/OIN-Fincance-SubGraph,https://github.com/Braeden0415/OIN-Fincance-SubGraph,braeden0415,0,2022-04-21 18:36:23+00:00
 code-fiddle/diypunks,https://github.com/code-fiddle/diypunks,code-fiddle,0,2022-04-20 16:36:16+00:00
 VitalPointAI/subgraph-poolv1,https://github.com/VitalPointAI/subgraph-poolv1,vitalpointai,0,2022-04-16 19:48:18+00:00
-elvismdev/cubansea,https://github.com/elvismdev/cubansea,elvismdev,0,2022-04-15 19:22:15+00:00
 travisformayor/curio-holders,https://github.com/travisformayor/curio-holders,travisformayor,0,2022-04-12 18:48:30+00:00
 Convergence-Finance/convergence-moonbeam-subgraph,https://github.com/Convergence-Finance/convergence-moonbeam-subgraph,convergence-finance,0,2022-04-06 10:02:47+00:00
 VitalPointAI/subgraph-catalyst-factory-mainnet,https://github.com/VitalPointAI/subgraph-catalyst-factory-mainnet,vitalpointai,0,2022-04-02 23:05:27+00:00
@@ -444,6 +443,7 @@ merklejerk/mooncatsrescue-subgraph,https://github.com/merklejerk/mooncatsrescue-
 zapaz/compound-v2-subgraph-kovan,https://github.com/zapaz/compound-v2-subgraph-kovan,zapaz,0,2021-02-28 22:13:03+00:00
 MantraDAO/om-staking-v2-subgraph,https://github.com/MantraDAO/om-staking-v2-subgraph,mantradao,0,2021-02-04 04:57:46+00:00
 AxieWorld/axie-infinity-core-subgraph,https://github.com/AxieWorld/axie-infinity-core-subgraph,axieworld,2,2021-02-03 09:06:44+00:00
+smartnarrative/snn-graph-1,https://github.com/smartnarrative/snn-graph-1,smartnarrative,0,2021-01-23 17:26:33+00:00
 PierrickGT/piedao-subgraph,https://github.com/PierrickGT/piedao-subgraph,pierrickgt,2,2021-01-20 21:41:57+00:00
 push-protocol/push-subgraph,https://github.com/push-protocol/push-subgraph,push-protocol,2,2021-01-07 14:14:48+00:00
 Africaswap/africaswap-subgraph,https://github.com/Africaswap/africaswap-subgraph,africaswap,0,2021-01-01 22:44:50+00:00

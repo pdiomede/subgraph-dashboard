@@ -3793,5 +3793,18 @@ table.datatable th, table.datatable td {
     document.body.classList.toggle("light-mode");
   }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" defer></script>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const table = document.querySelector("#table");
+    new simpleDatatables.DataTable(table, {
+      perPage: 50,          // 👈 Show 50 rows per page
+      perPageSelect: false  // 👈 Hide the dropdown
+    });
+  });
+</script>
+
+
 </body>
 </html>

@@ -1,169 +1,202 @@
+
+import os
+import shutil
+from datetime import datetime, timedelta
+
+# Function to reliably fetch GitHub owner avatar URL
+def github_avatar(owner):
+    return f"https://github.com/{owner}.png"
+
+dashboard_files = ["index.html", "index2.html"]
+archive_folder = "./archive"
+
+if not os.path.exists(archive_folder):
+    os.makedirs(archive_folder)
+
+yesterday = datetime.now() - timedelta(days=1)
+date_suffix = yesterday.strftime("%m%d%Y")
+
+for file in dashboard_files:
+    if os.path.exists(file):
+        archived_file_name = f"{os.path.splitext(file)[0]}_{date_suffix}.html"
+        archived_path = os.path.join(archive_folder, archived_file_name)
+        shutil.move(file, archived_path)
+        print(f"✅ Archived {file} to {archived_path}")
+
+
 import pandas as pd
-from datetime import datetime, timezone
+import json
+from datetime import datetime
 
-# Read CSV files
-subgraph_df = pd.read_csv("subgraph_repositories_filtered.csv")
-substreams_df = pd.read_csv("substreams_repositories_filtered.csv")
+# Function to generate HTML dashboard
+def generate_dashboard(csv_file, metadata_file, output_file, dashboard_title, dashboard, other, other_dashboard_link):
+    df = pd.read_csv(csv_file)
+    df.sort_values(by="stars", ascending=False, inplace=True)
 
-def generate_table_rows(df):
-    rows = []
-    for _, row in df.iterrows():
-        owner = row["owner"]
-        avatar = f"https://avatars.githubusercontent.com/{owner}"
-        row_html = f"""
-        <tr>
-            <td><a href="{row['url']}" target="_blank">{row['repository']}</a></td>
-            <td><a href="https://github.com/{owner}" target="_blank">
-                <img src="{avatar}" alt="{owner}" style="width:20px; vertical-align:middle; border-radius:50%;"/> {owner}
-            </a></td>
-            <td>{row['stars']}</td>
-            <td>{row['last_updated']}</td>
-        </tr>"""
-        rows.append(row_html)
-    return "\n".join(rows)
+    # Load metadata
+    with open(metadata_file) as f:
+        metadata = json.load(f)
 
-# Metadata
-now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    # HTML and JavaScript template
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{dashboard_title}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
 
-# Template parts
-pre_tbody = r"""<!DOCTYPE html>
+        <style>
+            .toggle-btn {{
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background-color: #444;
+                color: #fff;
+                padding: 8px 12px;
+                border-radius: 20px;
+                cursor: pointer;
+                box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+                user-select: none;
+            }}
+            .toggle-btn:hover {{
+                background-color: #555;
+            }}
 
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Subgraph Dashboard</title>
-<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet"/>
-<style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-    a {
-      color: #4ea1ff;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .light-mode {
-      background-color: #ffffff;
-      color: #000000;
-    }
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      cursor: pointer;
-    }
-    table img {
-      vertical-align: middle;
-      border-radius: 50%;
-      width: 20px;
-      margin-right: 8px;
-    }
-    .meta {
-      margin-bottom: 20px;
-    }
-  </style>
-<style>
-table.datatable {
-  border: 2px solid #4ea1ff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-table.datatable thead {
-  background-color: #1e1e1e;
-}
-table.datatable th, table.datatable td {
-  border-bottom: 1px solid #333;
-  padding: 12px;
-}
-</style>
-<style>
-  thead th.sortable::after {
-    content: " ⇅";
-    font-size: 12px;
-    color: #888;
-  }
-  body.light-mode table.datatable thead {
-    background-color: #e0e0e0 !important;
-    color: #000 !important;
-  }
-</style>
-</head>
-<body>
-<h1>Subgraph Dashboard</h1>
+            /* Custom Table Borders */
+            .table-bordered-custom {{
+                border: 2px solid #4a90e2; /* Border color and width */
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }}
 
-  <p class="description">This is the list of GitHub repositories using Subgraphs. Excluding: <img src="https://avatars.githubusercontent.com/graphprotocol" alt="graphprotocol" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;"> <a href="https://github.com/graphprotocol" target="_blank">graphprotocol</a>, <img src="https://avatars.githubusercontent.com/edgeandnode" alt="edgeandnode" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;"> <a href="https://github.com/edgeandnode" target="_blank">edgeandnode</a>, <img src="https://avatars.githubusercontent.com/streamingfast" alt="streamingfast" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;"> <a href="https://github.com/streamingfast" target="_blank">streamingfast</a>, <img src="https://avatars.githubusercontent.com/graphops" alt="graphops" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;"> <a href="https://github.com/graphops" target="_blank">graphops</a>.</p>
+            .table-bordered-custom th,
+            .table-bordered-custom td {{
+                border-bottom: 1px solid #555;
+            }}
 
-<a href="index2.html">→ You can access here the Substreams Dashboard</a>
-<div class="toggle-btn" onclick="toggleTheme()">🌓<span style="margin-left: 10px; font-size: 14px; color: #aaa;">v1.0.1</span></div>
-<div class="meta" id="meta-info">
-<p><strong>🔍 Total available GitHub results:</strong> 3808</p>
-<p><strong>📦 Repositories collected:</strong> 460</p>
-<p><strong>🕒 Report generated on:</strong> 2025-03-22 14:14:14 UTC</p>
-</div>
-<table class="datatable datatable" id="table">
-<thead>
-<tr>
-<th>repository</th>
-<th>owner</th>
-<th>stars</th>
-<th>last updated</th>
-</tr>
-</thead>"""
-post_tbody = r"""</table>
-<script defer="" src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
-<script defer="" src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
-<script>
-  window.addEventListener("load", function () {
-    const table = document.querySelector("#table");
-    if (table) {
-      new simpleDatatables.DataTable(table, {
-        perPage: 50,
-        searchable: true,
-        sortable: true,
-        fixedHeight: true,
-        labels: {
-          placeholder: "🔍 Search...",
-          perPage: "",
-        },
-      });
-    }
-  });
+            .table-bordered-custom th {{
+                background-color: #333;
+            }}
 
-  function toggleTheme() {
-    document.body.classList.toggle("light-mode");
-  }
-</script>
+            body.bg-light .table-bordered-custom {{
+                border-color: #4a90e2;
+            }}
 
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" defer></script>
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
-    const table = document.querySelector("#table");
-    new simpleDatatables.DataTable(table, {
-      perPage: 50,          // 👈 Show 50 rows per page
-      perPageSelect: false  // 👈 Hide the dropdown
-    });
-  });
-</script>
+            body.bg-light .table-bordered-custom th {{
+                background-color: #ddd;
+                color: #222;
+            }}
 
+            body.bg-light .table-bordered-custom td {{
+                color: #333;
+                background-color: #fff;
+            }}
+        </style>
 
-</body>
-</html>"""
+        <script>
+            function toggleTheme() {{
+                const body = document.body;
+                const table = document.getElementById('dashboard');
 
-# Generate both files
-def write_dashboard(df, output_path, total_results):
-    html_rows = generate_table_rows(df)
-    html = f"{pre_tbody}<tbody>{html_rows}</tbody>{post_tbody}"
-    html = html.replace("3808", str(total_results))
-    html = html.replace("460", str(len(df)))
-    html = html.replace("2025-03-22 14:14:14 UTC", now)
-    with open(output_path, "w") as f:
-        f.write(html)
+                if (body.classList.contains('bg-dark')) {{
+                    body.classList.replace('bg-dark', 'bg-light');
+                    body.classList.replace('text-white', 'text-dark');
+                    table.classList.replace('table-dark', 'table-light');
+                }} else {{
+                    body.classList.replace('bg-light', 'bg-dark');
+                    body.classList.replace('text-dark', 'text-white');
+                    table.classList.replace('table-light', 'table-dark');
+                }}
+            }}
+        </script>
 
-write_dashboard(subgraph_df, "index.html", total_results=3808)
-write_dashboard(substreams_df, "index2.html", total_results=526)
+    </head>
+    
+    <body class="bg-dark text-white">
+        <div class="toggle-btn" onclick="toggleTheme()">🌓<span style="margin-left: 10px; font-size: 14px; color: #aaa;">v1.0.2</span></div>
+
+        <div class="container py-4 position-relative">
+            <h1 class="display-5 fw-bold text-center">{dashboard_title}</h1>
+
+            <p class="text-start mt-4">This is the list of GitHub repositories using {dashboard}, for {other} click 
+            <a href="{other_dashboard_link}" class="text-decoration-none text-info">here</a>.
+            
+            <br/>
+            Excluding:
+            <img src="https://avatars.githubusercontent.com/graphprotocol" alt="graphprotocol" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;">
+            <a href="https://github.com/graphprotocol" target="_blank">graphprotocol</a>, 
+            <img src="https://avatars.githubusercontent.com/edgeandnode" alt="edgeandnode" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;">
+            <a href="https://github.com/edgeandnode" target="_blank">edgeandnode</a>, 
+            <img src="https://avatars.githubusercontent.com/streamingfast" alt="streamingfast" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;">
+            <a href="https://github.com/streamingfast" target="_blank">streamingfast</a>, 
+            <img src="https://avatars.githubusercontent.com/pinax-network" alt="pinax" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;">
+            <a href="https://github.com/pinax-network" target="_blank">pinax</a>, 
+            <img src="https://avatars.githubusercontent.com/graphops" alt="graphops" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:4px;">
+            <a href="https://github.com/graphops" target="_blank">graphops</a>.
+            
+            </p>
+
+            <div class="text-start mb-3">
+                🔍 Total available GitHub results: {metadata['total_count']}<br>
+                📦 Repositories collected: {metadata['repo_count']}<br>
+                🕒 Report generated on: {metadata['generated_at']}
+            </div>
+
+            <table id="dashboard" class="table table-dark table-striped table-hover table-bordered-custom" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Repository</th>
+                        <th>Owner</th>
+                        <th>Stars</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {''.join(f"""
+                    <tr>
+                        <td>
+                            <a href='{row['url']}' class='text-info' target='_blank'>🔗 {row['repository']}</a>
+                        </td>
+                        <td>
+                            <img src='{github_avatar(row['owner'])}' alt='{row['owner']}' style='width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;'>
+                            <a href='https://github.com/{row['owner']}' target='_blank'>{row['owner']}</a>
+                        </td>
+                        <td>{row['stars']}</td>
+                        <td>{row['last_updated']}</td>
+                    </tr>
+                    """ for index, row in df.iterrows())}
+                </tbody>
+
+            </table>
+        </div>
+        <script>
+            $(document).ready(function() {{
+                $('#dashboard').DataTable({{
+                    paging: true,
+                    pageLength: 50,
+                    lengthChange: false,
+                    searching: true,
+                    ordering: true,
+                    order: [[2, 'desc']]
+                }});
+            }});
+        </script>
+    </body>
+    </html>
+    """
+
+    # Write HTML content to file
+    with open(output_file, "w") as file:
+        file.write(html_content)
+
+# Generate dashboards
+generate_dashboard("subgraph_repositories_filtered.csv", "subgraph_metadata.json", "index.html", "Subgraphs Dashboard", "Subgraphs","Substreams","index2.html")
+generate_dashboard("substreams_repositories_filtered.csv", "substreams_metadata.json", "index2.html", "Substreams Dashboard", "Substreams", "Subgraphs", "index.html")

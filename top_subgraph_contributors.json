@@ -1,10 +1,18 @@
 [
   {
-    "owner":"protofire",
+    "owner":"vitalpointai",
     "repo_count":5
   },
   {
-    "owner":"vitalpointai",
+    "owner":"schmidsi",
+    "repo_count":4
+  },
+  {
+    "owner":"gallodasballo",
+    "repo_count":4
+  },
+  {
+    "owner":"litegraph",
     "repo_count":4
   },
   {
@@ -12,19 +20,15 @@
     "repo_count":3
   },
   {
-    "owner":"kleros",
-    "repo_count":3
-  },
-  {
     "owner":"digitalax",
     "repo_count":3
   },
   {
-    "owner":"schmidsi",
+    "owner":"itsjerryokolo",
     "repo_count":3
   },
   {
-    "owner":"tellor-io",
+    "owner":"extropianism-io",
     "repo_count":3
   },
   {
@@ -32,11 +36,7 @@
     "repo_count":3
   },
   {
-    "owner":"gallodasballo",
+    "owner":"protofire",
     "repo_count":3
-  },
-  {
-    "owner":"1hive",
-    "repo_count":2
   }
 ]
